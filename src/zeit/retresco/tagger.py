@@ -28,6 +28,21 @@ class Tagger(zeit.cms.content.dav.DAVPropertiesAdapter):
     pinned+disabled keywords will effectively be reset. (Keywords that are
     assigned to content already will remain usable, though, since the label is
     pretty much the only interesting property.)
+
+    The DAV property is stored on the content, which is passed to ``__init__``.
+    The attached `Tag` objects, including pinned and disabled attributes, are
+    stored in the postgres database.
+
+    As something may have changed, we need to read and/or write all tags
+    from/to xml for almost every atomic operation, and we cannot cache them on
+    the ``Tagger``.
+
+    There are also '<rankedTags>' in the XML visible in vivi but these are
+    written by ``zeit.cms.tagging.tag.update_tags_on_checkin`` and
+    ``zeit.cms.tagging.tag.update_tags_on_modify``. At this point, the
+    information about pinned and disabled tags is omitted, as it is not needed
+    by friedbert.
+
     """
 
     grok.implements(zeit.cms.tagging.interfaces.ITagger)
@@ -163,6 +178,13 @@ class Tagger(zeit.cms.content.dav.DAVPropertiesAdapter):
         return tag
 
     def update(self):
+        """Update the keywords with generated keywords from retresco.
+
+        A number of reasonable keywords are retrieved from retresco. This set
+        is reduced by the disabled keywords and enriched by the pinned
+        keywords. The resulting set is finally written to the DAV property.
+
+        """
         log.info('Updating tags for %s', self.context.uniqueId)
         tms = zope.component.getUtility(zeit.retresco.interfaces.ITMS)
         keywords = tms.extract_keywords(self.context)
