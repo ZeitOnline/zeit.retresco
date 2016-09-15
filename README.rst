@@ -81,7 +81,7 @@ Gegebenenfalls kann also nicht dasselbe, aber ein gleichnamiges Schlagwort
 hinzugefügt werden.
 
 Aus diesem Grund werden Schlagworte aus ``zeit.intrafind`` auch nicht mehr beim
-Type-Ahead unterstützt. Genauer ist eine Spezialbehandlung für Schlagwörter
+Type-Ahead unterstützt. Genauer ist eine Spezialbehandlung für Schlagworte
 entfallen, die nicht auf der Whiteliste stehen. Darüber hinaus wird das
 nachschlagen von Schlagworten nach ihrer UUID nicht mehr unterstützt.
 
