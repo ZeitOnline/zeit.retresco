@@ -74,7 +74,7 @@ class FunctionalTestCase(zeit.cms.testing.FunctionalTestCase):
 
 
 class TagTestHelpers(object):
-    """Helper to create keyword property in DAV-Propertiy."""
+    """Helper to create keyword property in DAV-Property."""
 
     def set_tags(self, content, xml):
         """
