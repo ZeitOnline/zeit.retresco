@@ -74,10 +74,11 @@ class FunctionalTestCase(zeit.cms.testing.FunctionalTestCase):
 
 
 class TagTestHelpers(object):
-    """Helper to create keyword property in DAV-Property."""
+    """Helper to prefill DAV-Property used for keywords of a content object."""
 
     def set_tags(self, content, xml):
-        """
+        """Prefill DAV-Property for keywords of `content` with `xml`.
+
         It inserts `xml` into a newly created DAV-property 'rankedTags' under
         the tagging-namespace key. `xml` is a string containing XML
         representing `Tag` objects, which requires `type` and `text`::
