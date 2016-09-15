@@ -156,6 +156,8 @@ class Tagger(zeit.cms.content.dav.DAVPropertiesAdapter):
         tag = Tag(label, entity_type)
         if tag.code in self.pinned:
             tag.pinned = True
+        # XXX it is not understood by the writer, whether we really need this.
+        # It was kept from the former implementation in `zeit.cms.tagging`.
         tag.__parent__ = self
         tag.__name__ = tag.code
         return tag

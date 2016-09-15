@@ -74,8 +74,19 @@ class FunctionalTestCase(zeit.cms.testing.FunctionalTestCase):
 
 
 class TagTestHelpers(object):
+    """Helper to create keyword property in DAV-Propertiy."""
 
     def set_tags(self, content, xml):
+        """
+        It inserts `xml` into a newly created DAV-property 'rankedTags' under
+        the tagging-namespace key. `xml` is a string containing XML
+        representing `Tag` objects, which requires `type` and `text`::
+
+            <tag type="Person">Karen Duve</tag>
+            <tag type="Location">Berlin</tag>
+
+        """
+
         dav = zeit.connector.interfaces.IWebDAVProperties(content)
         name, ns = dav_key = (
             'rankedTags', 'http://namespaces.zeit.de/CMS/tagging')
