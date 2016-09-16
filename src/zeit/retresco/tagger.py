@@ -20,10 +20,7 @@ log = logging.getLogger(__name__)
 
 
 class Tagger(zeit.cms.content.dav.DAVPropertiesAdapter):
-    """Serializes keywords to an XML structure and stores it in DAV-Properties.
-
-    The DAV-Properties are associated with the ``context``, i.e. the attached
-    ``Tag`` objects, including their pinned and disabled state.
+    """Serializes keywords to an XML structure and stores it in a DAV-Property.
 
     The serialization format (including pinned and disabled keywords) is
     actually backwards compatible with zeit.intrafind, but since the TMS uses
@@ -32,16 +29,14 @@ class Tagger(zeit.cms.content.dav.DAVPropertiesAdapter):
     assigned to content already will remain usable, though, since the label is
     pretty much the only interesting property.)
 
-    In case of a change, we need to read and/or write all tags from/to xml for
-    almost every atomic operation, and we cannot cache them on the ``Tagger``.
-    Caching is not possible, since by adapting to ``ITagger`` returns a
-    *different* Tagger each time and they would need to keep in sync with each
-    other. So the easiest way is reading the DAV-Properties every time.
+    We need to read/write all tags from/to xml for every operation, since
+    adapting to ``ITagger`` returns a *different* Tagger each time, so we
+    cannot (easily) cache anything on the Tagger instance.
 
     There are also '<rankedTags>' in the XML of ``context`` but these are
     written by ``zeit.cms.tagging.tag.add_ranked_tags_to_head``. At this point,
-    the information about pinned and disabled tags is omitted, as it is not
-    needed by Friedbert.
+    the information about pinned and disabled tags is omitted, as it is only
+    needed in vivi.
 
     """
 

@@ -39,12 +39,12 @@ Idee her ein OrderedDict von ``ITag``-Objekten, mit den folgenden Eigenschaften:
 :entity_type: person, location, etc.
 
 Aus Gründen der Effizienz und Abwärtskompatibilität wird für den ``code`` eines
-Schlagworts nicht die ``entity_id`` aus dem TMS verwendet, sondern der ``code``
+Schlagworts nicht die ``doc_id`` aus dem TMS verwendet, sondern der ``code``
 wird aus ``label`` und ``entity_type`` generiert. Dadurch kann ein Schlagwort
 direkt aus dem ``code`` erzeugt werden, anstatt die ID über einen HTTP Request
 im TMS nachzuschlagen.
 
-Der ``url_value`` wurde nur aus historischen Gründen implementiert, da die
+Der ``url_value`` ist hier nur aus historischen Gründen implementiert, da die
 Eigenschaft von ``ITag`` erwartet wird. ``url_value`` wird zurzeit im Friedbert
 verwendet, um Links auf Themenseiten zu erstellen. In Zukunft werden dafür
 jedoch TMS-Themenseiten verwendet (siehe `Themenseiten`_).
@@ -67,8 +67,8 @@ Schlagworte hinzufügen
 
 Um ein Schlagwort manuell hinzuzufügen, bietet das TMS eine Type-Ahead API.
 Diese kann über ``zeit.retresco.connection.TMS.get_keywords(term)``
-angesprochen werden. Aus historischen Gründen wird der Zugriff jedoch über
-``zeit.retresco.whitelist.Whitelist.search(term)`` gekapselt.
+angesprochen werden. Zur Abstraktion wird der Zugriff jedoch über
+``zeit.cms.tagging.interfaces.IWhitelist.search(term)`` gekapselt.
 
 
 Abwärtskompatibilität
@@ -78,18 +78,16 @@ Schlagworte, die mit ``zeit.intrafind`` angelegt wurden, können nach wie vor
 gelesen und gepinnt werden. Es ist jedoch nicht möglich sie erneut
 hinzuzufügen, da Retresco eine unabhängige Menge von Schlagworten verwaltet.
 Gegebenenfalls kann also nicht dasselbe, aber ein gleichnamiges Schlagwort
-hinzugefügt werden.
+hinzugefügt werden. Im Gegensatz zu ``zeit.intrafind`` werden außerdem
+Schlagworte, die nicht auf der Whitelist stehen, beim Type-Ahead nicht
+unterstützt.
 
-Aus diesem Grund werden Schlagworte aus ``zeit.intrafind`` auch nicht mehr beim
-Type-Ahead unterstützt. Genauer ist eine Spezialbehandlung für Schlagworte
-entfallen, die nicht auf der Whiteliste stehen. Darüber hinaus wird das
-nachschlagen von Schlagworten nach ihrer UUID nicht mehr unterstützt.
-
-Die Abwärtskompatibilität funktioniert über die Generierung vom ``code`` aus
-``label`` und ``entity_type``, da diese Informationen sowohl in
-``zeit.intrafind`` als auch in ``zeit.retresco`` hinterlegt werden. Die
-inkompatible UUID, welche früher als ``code`` von Schlagworten aus
-``zeit.intrafind`` verwendet wurde, wird ignoriert.
+Die Abwärtskompatibilität funktioniert, weil weil ``zeit.retresco`` die gleiche
+DAV-Property mit gleicher Syntax weiterhin benutzt, und über die Generierung
+vom ``code`` aus ``label`` und ``entity_type``, da diese Informationen sowohl
+in ``zeit.intrafind`` als auch in ``zeit.retresco`` hinterlegt werden. Die
+inkompatible UUID, die von ``zeit.intrafind`` als ``code`` verwendet wird, wird
+dabei schlicht ignoriert.
 
 
 Themenseiten
