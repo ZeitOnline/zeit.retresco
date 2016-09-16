@@ -37,6 +37,12 @@
       />
   </class>
 
+  <class class=".location.LocationList">
+    <require
+      interface="zeit.cms.tagging.interfaces.ILocationList"
+      permission="zope.View"
+      />
+  </class>
   </configure>
 
   <permission
