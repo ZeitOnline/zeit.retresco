@@ -39,7 +39,7 @@ Idee her ein OrderedDict von ``ITag``-Objekten, mit den folgenden Eigenschaften:
 :entity_type: person, location, etc.
 
 Aus Gründen der Effizienz und Abwärtskompatibilität wird für den ``code`` eines
-Schlagworts nicht die ``doc_id`` aus dem TMS verwendet, sondern der ``code``
+Schlagworts nicht die ``entity_id`` aus dem TMS verwendet, sondern der ``code``
 wird aus ``label`` und ``entity_type`` generiert. Dadurch kann ein Schlagwort
 direkt aus dem ``code`` erzeugt werden, anstatt die ID über einen HTTP Request
 im TMS nachzuschlagen.
@@ -82,9 +82,9 @@ hinzugefügt werden. Im Gegensatz zu ``zeit.intrafind`` werden außerdem
 Schlagworte, die nicht auf der Whitelist stehen, beim Type-Ahead nicht
 unterstützt.
 
-Die Abwärtskompatibilität funktioniert, weil weil ``zeit.retresco`` die gleiche
-DAV-Property mit gleicher Syntax weiterhin benutzt, und über die Generierung
-vom ``code`` aus ``label`` und ``entity_type``, da diese Informationen sowohl
+Die Abwärtskompatibilität funktioniert, weil ``zeit.retresco`` die gleiche DAV-
+Property mit gleicher Syntax weiterhin benutzt, und die Eigenschaft ``code``
+aus ``label`` und ``entity_type`` generiert wird, da diese Informationen sowohl
 in ``zeit.intrafind`` als auch in ``zeit.retresco`` hinterlegt werden. Die
 inkompatible UUID, die von ``zeit.intrafind`` als ``code`` verwendet wird, wird
 dabei schlicht ignoriert.
