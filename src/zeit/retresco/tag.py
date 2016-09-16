@@ -1,5 +1,4 @@
 # coding: utf-8
-import unicodedata
 import zeit.cms.interfaces
 import zeit.cms.tagging.interfaces
 import zope.cachedescriptors.property
@@ -9,8 +8,7 @@ import zope.interface
 class Tag(object):
     """Representation of a keyword."""
 
-    zope.interface.implements(zeit.cms.tagging.interfaces.ITag,
-                              zeit.cms.interfaces.ICMSContent)
+    zope.interface.implements(zeit.cms.tagging.interfaces.ITag)
 
     SEPARATOR = u'☃'
 
@@ -18,6 +16,7 @@ class Tag(object):
         self.label = label
         self.entity_type = entity_type
         self.pinned = False  # pinned state is set from outside after init
+        self.__name__ = self.code  # needed to fulfill `ICMSContent`
 
     @zope.cachedescriptors.property.Lazy
     def code(self):
@@ -32,8 +31,7 @@ class Tag(object):
         # `zeit.intrafind`, url_value was used to serve the urls to
         # 'Themenseiten'. With the new TMS retresco, 'Themenseiten' are served
         # by the TMS itself, so we can remove it after the switch.
-        return unicodedata.normalize(
-            'NFKD', self.label).encode('ascii', 'ignore').lower()
+        return zeit.cms.interfaces.normalize_filename(self.label)
 
     @classmethod
     def from_code(cls, code):

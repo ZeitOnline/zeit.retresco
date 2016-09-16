@@ -169,7 +169,6 @@ class Tagger(zeit.cms.content.dav.DAVPropertiesAdapter):
         # XXX it is not understood by the writer, whether we really need this.
         # It was kept from the former implementation in `zeit.cms.tagging`.
         tag.__parent__ = self
-        tag.__name__ = tag.code
         return tag
 
     def update(self):
