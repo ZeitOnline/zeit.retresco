@@ -6,10 +6,9 @@ import json
 import lxml.builder
 import mock
 import pytest
+import requests
 import requests.adapters
 import requests.exceptions
-import requests.models
-import requests.sessions
 import time
 import zeit.cms.tagging.interfaces
 import zeit.content.rawxml.rawxml
@@ -38,6 +37,25 @@ class TMSTest(zeit.retresco.testing.FunctionalTestCase):
         result = tms.extract_keywords(self.repository['testcontent'])
         self.assertEqual(['Berlin', 'Merkel', 'Obama', 'Washington'],
                          sorted([x.label for x in result]))
+
+    def test_keywords_are_sorted_by_score(self):
+        enriched = {
+            'doc_id': 'myid',
+            'rtr_persons': ['Merkel', 'Obama'],
+            'rtr_locations': ['Berlin', 'Washington'],
+        }
+        self.layer['request_handler'].response_body = json.dumps({
+            'entity_links': [
+                {'key': 'Merkel', 'key_type': 'person', 'score': "10.0"},
+                {'key': 'Obama', 'key_type': 'person', 'score': "8.0"},
+                {'key': 'Berlin', 'key_type': 'location', 'score': "5.0"},
+                # Washington left out on purpose
+            ]
+        })
+        tms = zope.component.getUtility(zeit.retresco.interfaces.ITMS)
+        result = tms.generate_keyword_list(enriched)
+        self.assertEqual(['Merkel', 'Obama', 'Berlin', 'Washington'],
+                         [x.label for x in result])
 
     def test_get_keywords_returns_a_list_of_tag_objects(self):
         self.layer['request_handler'].response_body = json.dumps({
