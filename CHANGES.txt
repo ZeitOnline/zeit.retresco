@@ -5,7 +5,9 @@ zeit.retresco changes
 1.10.6 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- ZON-3994: Implement `ITMS.get_article_keywords()`
+
+- ZON-3994: Store ordered keywords in TMS
 
 
 1.10.5 (2017-07-12)

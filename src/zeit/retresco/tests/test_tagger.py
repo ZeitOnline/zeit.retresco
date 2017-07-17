@@ -485,6 +485,6 @@ class TaggerUpdateTest(
         tagger = Tagger(content)
         with mock.patch('zeit.retresco.connection.TMS._request') as request:
             tagger.update()
-            data = request.call_args[1]['json']
+            data = request.call_args_list[0][1]['json']
             self.assertEqual(['Karen Duve'], data['rtr_keywords'])
             self.assertEqual(['Berlin'], data['rtr_locations'])
