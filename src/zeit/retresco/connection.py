@@ -48,7 +48,7 @@ class TMS(object):
                     label=keyword, entity_type=entity_type))
 
         # Sort result according to TMS `score`
-            entity_links = {}
+        entity_links = {}
         try:
             # XXX Works only for published documents at the moment, Retresco
             # must fix.
@@ -135,6 +135,34 @@ class TMS(object):
             return response['body']
         except (KeyError, requests.Timeout):
             return None
+
+    def get_article_keywords(self, uuid, timeout=None):
+        __traceback_info__ = (uuid,)
+        try:
+            response = self._request(
+                'GET /in-text-linked-documents/{}'.format(
+                    urllib.quote(uuid)), timeout=timeout)
+            data = response['entity_links']
+        except (KeyError, requests.Timeout):
+            return ()
+
+        entity_links = {}
+        for item in data:
+            # zeit.web expects the path without a leading slash
+            item['link'] = item.get('link', '')[1:]
+            entity_links[(item['key'], item['key_type'])] = item
+
+        # Sort by global order that was set in vivi (defaults to TMS score,
+        # compare `generate_keyword_list()` above).
+        result = []
+        for keyword in response['payload'].get('keywords', ()):
+            keyword = zeit.retresco.tag.Tag(
+                keyword['label'], keyword['entity_type'])
+            item = entity_links.get((keyword.label, keyword.entity_type), {})
+            keyword.link = item.get('link')
+            if keyword.link and item.get('status') != 'linked':
+                result.append(keyword)
+        return result
 
     def index(self, content, override_body=None):
         __traceback_info__ = (content.uniqueId,)
